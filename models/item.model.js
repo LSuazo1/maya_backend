@@ -42,7 +42,7 @@ Item.hasMany(ItemImages, {
     sourceKey: 'idItem'
 });
 
-ImagenesProducto.belongsTo(Item, {
+ItemImages.belongsTo(Item, {
     foreignKey: 'idItem',
     targetId: 'idItem'
 });

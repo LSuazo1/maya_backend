@@ -13,16 +13,17 @@ const storage = multer.diskStorage({
 });
 
 const upload = multer({ storage: storage });
-exports.upload = upload.array("archivo");
+exports.upload = upload.array("images");
+
 
 exports.uploadImage = async (req, res) => {
     const { files } = req
-
     const { data } = req.body;
     const data2 = JSON.parse(data);
 
+    console.log(data2);
+    console.log(files);
     try {
-
         //TODO: comprobar que existe el usuario
         const user = await User.findByPk(data2.idUser);
 
@@ -32,13 +33,13 @@ exports.uploadImage = async (req, res) => {
         const urlImagenes = files.map(file => file.filename);
 
         const item = Item.build(data2);
-        const { _previousDataValues, dataValues, ...producto3 } = await item.save();
-        item.idProducto = producto3.null;
+        const { _previousDataValues, dataValues, ...Item3 } = await item.save();
+        item.idItem = Item3.null;
         //TODO: Guardar las imagenes
         urlImagenes.map(async (url) => {
             let objectImagen = {
                 url,
-                idProducto: item.idItem
+                idItem: item.idItem
             }
             const image = ItemImages.build(objectImagen);
             await image.save();
@@ -48,8 +49,8 @@ exports.uploadImage = async (req, res) => {
     } catch (err) {
         res.status(500).json({
             error: {
-                error: 500,
-                mesage: e.message
+                status: 500,
+                message: e.message
             }
         })
     }

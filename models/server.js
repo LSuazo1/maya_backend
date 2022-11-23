@@ -6,41 +6,41 @@ const routeAuth = require('../routers/auth.route');
 const routeItems = require('../routers/items.route');
 
 class Server {
-  constructor() {
-    this.app = express();
-    this.port = process.env.PORT;
-    this.conectarDB();
-    this.middleware();
-    this.route();
-  }
-
-  async conectarDB() {
-    try {
-      await db.authenticate();
-      console.log('data cargada');
-    } catch (error) {
-      console.log(error);
+    constructor() {
+        this.app = express();
+        this.port = process.env.PORT;
+        this.conectarDB();
+        this.middleware();
+        this.route();
     }
-  }
 
-  middleware() {
-    // cors
-    this.app.use(cors());
+    async conectarDB() {
+        try {
+            await db.authenticate();
+            console.log('data cargada');
+        } catch (error) {
+            console.log(error);
+        }
+    }
 
-    // Lectura ytt paraseo del body
-    this.app.use(express.json());
-  }
+    middleware() {
+        // cors
+        this.app.use(cors());
 
-  route() {
-    this.app.use('/auth', routeAuth);
-    this.app.use('/users', routeUsers);
-    this.app.use('/items', routeItems);
-  }
+        // Lectura ytt paraseo del body
+        this.app.use(express.json());
+    }
 
-  listen() {
-    this.app.listen(this.port, () => {
-      console.log(`express se esta corriendo por el servidor http://localhost:${this.port}`);
-    });
-  }
+    route() {
+        this.app.use('/v1/auth', routeAuth);
+        this.app.use('/v1/users', routeUsers);
+        this.app.use('/v1/items', routeItems);
+    }
+
+    listen() {
+        this.app.listen(this.port, () => {
+            console.log(`express se esta corriendo por el servidor http://localhost:${this.port}`);
+        });
+    }
 }
 module.exports = Server;

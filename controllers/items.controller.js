@@ -5,15 +5,11 @@ const path = require("path");
 const fs = require("fs");
 
 
-
 const getOneImage = async (req, res) => {
     const { id } = req.body
     const { dataValues } = await ItemImages.findByPk(id);
 
-
-    if (!dataValues) {
-        return res.status(404).json({ msg: 'Image not found' });
-    }
+    if (!dataValues) { return res.status(404).json({ message: 'Image not found' }); }
 
     try {
         if (dataValues.url) {
@@ -28,43 +24,54 @@ const getOneImage = async (req, res) => {
     } catch (error) {
         res.status(500).json({
             error: {
-                error: 500,
-                mesage: e.message
+                status: 500,
+                message: error.message
             }
         });
     }
-
 }
 
-const getSeveral= async (req, res) => {
-    const { page } = req.query;
+const getSeveral = async (req, res) => {
+    const { limit, offset, page } = req.query;
     const reg = /^[0-9]$/
+
     try {
-  
-      if (!reg.test(page)) {
-        return res.status(404).json({ msg: "User not found" })
-      }
-      limit = 5;
-      const offset = ((page  * limit) - limit)
-  
-      const [items, total] = await Promise.all([
-        Item.findAll({ limit, offset, include: ItemImages })
-        , Item.count()
-      ])
-  
-     total = Math.ceil(total / limit);
-      res.json({ items, page, total,offset});
-    } catch (error) {
+        if (!reg.test(page)) {
+            return res.status(416).json({ message: "Value out of range." })
+        }
+        if (!reg.test(limit)) { return res.status(416).json({ message: "Value out of range." }) }
+
+        const [items, total] = await Promise.all([
+            Item.findAll({ limit, offset, include: ItemImages }), Item.count()
+        ])
+        const data = {
+            items,
+            page,
+            total,
+            offset
+        }
+
+        res.status(200).json(data.items);
+    } catch (e) {
         res.status(500).json({
             error: {
-                error: 500,
-                mesage: e.message
+                status: 500,
+                message: e.message
             }
         });
     }
-  
+}
+
+const createOne = async (req, res) => {
+    const { name, category, price, location, stock, images } = req.body
+
+    try {
+        console.log(req.files)
+    } catch (e) {
+        console.log(e)
+    }
+
 }
 
 
-
-module.exports = { getSeveral,getOneImage }
+module.exports = { getSeveral, getOneImage, createOne }
