@@ -52,6 +52,7 @@ const getSeveral = async (req, res) => {
     }
 }
 
+
 const createOne = async (req, res) => {
     const { name, category, price, location, stock, images } = req.body
 

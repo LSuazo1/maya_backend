@@ -21,6 +21,7 @@ const statusCodes = {
     }
 }
 
+
 const statusResponse = (code, message) => {
     status = statusCodes[code]
 

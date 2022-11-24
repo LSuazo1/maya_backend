@@ -5,6 +5,7 @@ const { generateId } = require('../helpers/generateid');
 const { statusResponse } = require('../helpers/getStatusCode');
 
 
+
 const createOne = async (req, res) => {
     const { firstName, lastName, email, password, phone, department, province } = req.body;
     const userData = {
@@ -17,6 +18,7 @@ const createOne = async (req, res) => {
         password: encryptPassword(password),
         token: generateId()
     }
+
 
     const userExist = await User.findOne({ where: { email } });
     if (userExist) return res.status(400).json(statusResponse(400))

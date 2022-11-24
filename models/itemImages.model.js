@@ -14,6 +14,7 @@ const ItemImages = db.define('ItemImages', {
         type: DataTypes.INTEGER
     },
 }, {
+
     tableName: 'itemImages'
 });
 

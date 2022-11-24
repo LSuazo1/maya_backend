@@ -9,4 +9,5 @@ route.get('/changePassword/:token', verifyAccount);
 route.post('/savePassword/:token', newPassword);
 
 
+
 module.exports = route;

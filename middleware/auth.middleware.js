@@ -11,6 +11,7 @@ const checkAuth = async (req, res, next) => {
         });
     }
 
+    
     try {
         const { uid, tipe } = jwt.verify(token, process.env.JWT_SECRET);
         const { dataValues } = await Persona.findByPk(uid);

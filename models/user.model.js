@@ -38,6 +38,7 @@ const User = db.define('user', {
     tableName: 'user',
 });
 
+
 User.hasMany(Item, {
     foreignKey: 'idUser',
     sourceKey: 'idUser',

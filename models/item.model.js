@@ -10,6 +10,7 @@ const Item = db.define('Item', {
     name: {
         type: DataTypes.STRING
     },
+    
     stock: {
         type: DataTypes.INTEGER
     },

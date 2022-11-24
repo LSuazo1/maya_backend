@@ -47,7 +47,7 @@
 
 UserObject = {
     email: 'email@example'
-    
+
 }
 
 ItemObject = {
@@ -206,6 +206,7 @@ responses = {
             }
         }
     },
+
     items: {
         getSeveral: {
             200: {

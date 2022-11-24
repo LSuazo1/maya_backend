@@ -7,6 +7,7 @@ const { generateJWT } = require('../helpers/generate-jws');
 const { statusResponse } = require('../helpers/getStatusCode');
 
 
+
 const signIn = async (req, res) => {
     const { email, password } = req.body
 
