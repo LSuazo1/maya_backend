@@ -1,14 +1,10 @@
-const { Router } = require('express');
+const route = require('express').Router()
 const { confirmAccount, signIn, changePassword, newPassword, verifyAccount } = require('../controllers/auth.controller');
-const route = new Router();
 
-//Confirma la cuenta cuenta
-route.get('/confirmAccount/:token', confirmAccount);
+
 route.post('/signin', signIn);
-
-//Recuperar Contrasenia
-route.post('/changePassword', changePassword);
-
+route.get('/confirmAccount/:token', confirmAccount); // Confirm the account
+route.post('/changePassword', changePassword); // Change password
 route.get('/changePassword/:token', verifyAccount);
 route.post('/savePassword/:token', newPassword);
 

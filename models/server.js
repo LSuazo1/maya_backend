@@ -5,12 +5,13 @@ const routeUsers = require('../routers/users.route');
 const routeAuth = require('../routers/auth.route');
 const routeItems = require('../routers/items.route');
 
+
 class Server {
     constructor() {
         this.app = express();
         this.port = process.env.PORT;
         this.conectarDB();
-        this.middleware();
+        this.middlewares();
         this.route();
     }
 
@@ -23,11 +24,8 @@ class Server {
         }
     }
 
-    middleware() {
-        // cors
+    middlewares() {
         this.app.use(cors());
-
-        // Lectura ytt paraseo del body
         this.app.use(express.json());
     }
 
@@ -43,4 +41,6 @@ class Server {
         });
     }
 }
+
+
 module.exports = Server;

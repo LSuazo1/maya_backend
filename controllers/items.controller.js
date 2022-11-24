@@ -3,6 +3,7 @@ const { ItemImages } = require('../models/itemImages.model');
 const { User } = require('../models/user.model');
 const path = require("path");
 const fs = require("fs");
+const { statusResponse } = require('../helpers/getStatusCode');
 
 
 const getOneImage = async (req, res) => {
@@ -22,12 +23,7 @@ const getOneImage = async (req, res) => {
 
         res.status(200).sendFile(pathImage);
     } catch (error) {
-        res.status(500).json({
-            error: {
-                status: 500,
-                message: error.message
-            }
-        });
+        res.status(500).json(statusResponse(500));
     }
 }
 
@@ -36,14 +32,13 @@ const getSeveral = async (req, res) => {
     const reg = /^[0-9]$/
 
     try {
-        if (!reg.test(page)) {
-            return res.status(416).json({ message: "Value out of range." })
-        }
+        if (!reg.test(page)) { return res.status(416).json({ message: "Value out of range." }) }
         if (!reg.test(limit)) { return res.status(416).json({ message: "Value out of range." }) }
 
         const [items, total] = await Promise.all([
             Item.findAll({ limit, offset, include: ItemImages }), Item.count()
         ])
+
         const data = {
             items,
             page,
@@ -53,12 +48,7 @@ const getSeveral = async (req, res) => {
 
         res.status(200).json(data.items);
     } catch (e) {
-        res.status(500).json({
-            error: {
-                status: 500,
-                message: e.message
-            }
-        });
+        res.status(500).json(statusResponse(500));
     }
 }
 

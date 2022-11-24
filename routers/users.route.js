@@ -1,9 +1,12 @@
-const {Router}=require('express');
-const { createOne } = require('../controllers/users.controller');
-const route=new Router();
+const route = require('express').Router();
+const { getSeveral, createOne, getOne, updateOne, deleteOne } = require('../controllers/users.controller');
 
 
+route.get('/', getSeveral)
+route.get('/:id', getOne)
+route.post('/', createOne)
+route.put('/:id', updateOne)
+route.delete('/:id', deleteOne)
 
-route.post('/',createOne);
 
 module.exports = route;

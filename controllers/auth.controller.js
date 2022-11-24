@@ -1,20 +1,22 @@
+const bcryptjs = require('bcryptjs');
 const { User } = require('../models/user.model');
 const { emailRecoverPassword } = require('../helpers/emailRecoverPassword');
 const { encryptPassword } = require('../helpers/encryptPassword');
 const { generateId } = require('../helpers/generateid');
 const { generateJWT } = require('../helpers/generate-jws');
-const bcryptjs = require('bcryptjs');
+const { statusResponse } = require('../helpers/getStatusCode');
 
 
 const signIn = async (req, res) => {
     const { email, password } = req.body
 
+    const userExist = await User.findOne({ where: { email } })
+    if (!userExist) return res.status(400).json(statusResponse(400))
+
     try {
-        const userExist = await User.findOne({ where: { email } })
         const confirmPassword = await bcryptjs.compare(password, userExist.password)
 
-        if (!userExist) return res.status(401).json({ message: 'Unauthorized' })
-        if (userExist.token !== null) return res.status(403).json({ message: 'Your account has not been confirmed' }) // Comprobar si el usuario esta confirmado
+        if (userExist.token !== null) return res.status(403).json({ message: 'Your account has not been confirmed' })
         if (!confirmPassword) { return res.status(404).json({ message: 'wrong password or email' }); }
 
         const token = await generateJWT(userExist.idUser);
@@ -28,12 +30,7 @@ const signIn = async (req, res) => {
             token,
         });
     } catch (e) {
-        res.status(500).json({
-            error: {
-                status: 500,
-                message: e.message
-            }
-        })
+        res.status(500).json(statusResponse(500))
     }
 }
 
@@ -50,12 +47,7 @@ const confirmAccount = async (req, res) => {
 
         res.status(200).json({ message: "User confirmed successfully" })
     } catch (error) {
-        res.status(500).json({
-            error: {
-                status: 500,
-                message: e.message
-            }
-        })
+        res.status(500).json(statusResponse(500))
     }
 }
 
@@ -81,12 +73,7 @@ const changePassword = async (req, res) => {
         })
         res.status(200).json({ message: 'Hemos enviado un email con las instrucciones' })
     } catch (error) {
-        res.status(500).json({
-            error: {
-                status: 500,
-                message: e.message
-            }
-        });
+        res.status(500).json(statusResponse(500));
     }
 }
 
@@ -98,12 +85,7 @@ const verifyAccount = async (req, res) => {
         if (!tokenValid) return res.status(404).json({ message: 'invalid token' })
         res.status(200).json({ message: 'Valid token and user exist' })
     } catch (error) {
-        res.status(500).json({
-            error: {
-                status: 500,
-                message: e.message
-            }
-        });
+        res.status(500).json(statusResponse(500));
     }
 }
 
@@ -129,14 +111,8 @@ const newPassword = async (req, res) => {
             message: 'Password changed successfully'
         })
     } catch (error) {
-        res.status(500).json({
-            error: {
-                status: 500,
-                message: e.message
-            }
-        });
+        res.status(500).json(statusResponse(500));
     }
-
 }
 
 

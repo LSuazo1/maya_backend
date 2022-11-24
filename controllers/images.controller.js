@@ -4,6 +4,8 @@ const { v4: uuidv4 } = require('uuid');
 const { User } = require('../models/user.model');
 const { Item } = require('../models/item.model');
 const { ItemImages } = require('../models/itemImages.model');
+const { statusResponse } = require('../helpers/getStatusCode')
+
 
 const storage = multer.diskStorage({
     destination: path.join(__dirname, "../uploads"),
@@ -26,10 +28,8 @@ exports.uploadImage = async (req, res) => {
     try {
         //TODO: comprobar que existe el usuario
         const user = await User.findByPk(data2.idUser);
+        if (!user) return res.status(403).json(statusResponse(403));
 
-        if (!user) {
-            return res.status(404).json({ msg: 'User not found' });
-        }
         const urlImagenes = files.map(file => file.filename);
 
         const item = Item.build(data2);
@@ -47,12 +47,7 @@ exports.uploadImage = async (req, res) => {
 
         res.status(200).json({ item });
     } catch (err) {
-        res.status(500).json({
-            error: {
-                status: 500,
-                message: e.message
-            }
-        })
+        res.status(500).json(statusResponse(500))
     }
 
 }
